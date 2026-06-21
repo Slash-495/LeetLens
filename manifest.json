@@ -19,5 +19,11 @@
       "matches": ["*://leetcode.com/problems/*"],
       "js": ["src/content/index.tsx"]
     }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["monaco-inject.js"],
+      "matches": ["*://leetcode.com/*"]
+    }
   ]
 }

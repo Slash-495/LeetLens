@@ -8,8 +8,10 @@ export function ContentApp() {
   const [isOpen, setIsOpen] = useState(false);
   const [context, setContext] = useState<ProblemContext | null>(null);
   const [isExtracting, setIsExtracting] = useState(false);
+  const [isContest, setIsContest] = useState(() => window.location.href.includes('contest'));
 
   const extractContext = async () => {
+    if (isContest) return;
     setIsExtracting(true);
     try {
       const result = await LeetcodeExtractor.getProblemContext();
@@ -22,18 +24,25 @@ export function ContentApp() {
   };
 
   useEffect(() => {
-    // Initial extraction with a slight delay to ensure LeetCode DOM is ready
-    setTimeout(extractContext, 1500);
+    if (!isContest) {
+      setTimeout(extractContext, 1500);
+    }
 
-    // Re-extract on navigation
-    NavigationObserver.start(() => {
-      setTimeout(extractContext, 1000);
+    NavigationObserver.start((newUrl) => {
+      const contest = newUrl.includes('contest');
+      setIsContest(contest);
+      if (!contest) {
+        setTimeout(extractContext, 1000);
+      } else {
+        setContext(null);
+        setIsOpen(false); // Optionally close panel if they enter a contest
+      }
     });
 
     return () => {
       NavigationObserver.stop();
     };
-  }, []);
+  }, [isContest]);
 
   return (
     <>
@@ -48,6 +57,7 @@ export function ContentApp() {
         context={context}
         isExtracting={isExtracting}
         onRefresh={extractContext}
+        isContest={isContest}
       />
     </>
   );

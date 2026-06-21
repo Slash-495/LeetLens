@@ -2,6 +2,7 @@ import { X, RefreshCw, LayoutDashboard, MessageCircle, CheckCircle, Eye, Trendin
 import { useState } from 'react';
 import type { ProblemContext } from '../../services/leetcodeExtractor';
 import { OverviewTab } from './OverviewTab';
+import { ChatTab } from './ChatTab';
 
 interface SlidePanelProps {
   isOpen: boolean;
@@ -9,14 +10,15 @@ interface SlidePanelProps {
   context: ProblemContext | null;
   isExtracting: boolean;
   onRefresh: () => void;
+  isContest?: boolean;
 }
 
-export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh }: SlidePanelProps) {
+export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, isContest }: SlidePanelProps) {
   const [activeTab, setActiveTab] = useState('Overview');
 
   const tabs = [
     { name: 'Overview', icon: <LayoutDashboard size={16} /> },
-    { name: 'Chat', icon: <MessageCircle size={16} />, disabled: true },
+    { name: 'Chat', icon: <MessageCircle size={16} /> },
     { name: 'Review', icon: <CheckCircle size={16} />, disabled: true },
     { name: 'Visualize', icon: <Eye size={16} />, disabled: true },
     { name: 'Progress', icon: <TrendingUp size={16} />, disabled: true }
@@ -97,8 +99,16 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh }
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto p-4">
-        {isExtracting && !context ? (
+      <div className="flex-1 overflow-y-auto p-4 relative">
+        {isContest ? (
+          <div className="flex flex-col items-center justify-center h-full text-center gap-4 px-4">
+            <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-500 mb-2">
+              <span className="font-bold text-xl">!</span>
+            </div>
+            <p className="text-sm text-text font-medium">LeetLens is unavailable during LeetCode contests.</p>
+            <p className="text-xs text-muted">Contest mode detected. AI assistance and code extraction are disabled to ensure fair play.</p>
+          </div>
+        ) : isExtracting && !context ? (
           <div className="flex flex-col items-center justify-center h-full text-muted gap-3">
             <RefreshCw className="animate-spin" size={24} />
             <p className="text-sm">Extracting problem context...</p>
@@ -115,6 +125,8 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh }
           </div>
         ) : activeTab === 'Overview' ? (
           <OverviewTab context={context} />
+        ) : activeTab === 'Chat' ? (
+          <ChatTab context={context} />
         ) : null}
       </div>
     </div>
