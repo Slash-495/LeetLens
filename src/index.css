@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-text font-sans antialiased m-0 p-0;
+    width: 400px;
+    height: 500px;
+  }
+}
+
+/* Hide scrollbar for cleaner look in extension popup */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-xl;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-muted;
+}

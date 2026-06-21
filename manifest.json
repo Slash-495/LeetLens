@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "LeetLens",
+  "version": "1.0.0",
+  "description": "AI-powered interview and coding assistant for LeetCode.",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://leetcode.com/problems/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["*://leetcode.com/problems/*"],
+      "js": ["src/content.ts"]
+    }
+  ]
+}
