@@ -46,4 +46,50 @@ ${context.code}
       default: return "Give me a hint.";
     }
   }
+
+  static buildReviewPrompt(context: ProblemContext): string {
+    return `You are a Senior Software Engineer and Technical Interviewer.
+Please review the following solution for the problem "${context.title}".
+
+--- PROBLEM CONTEXT ---
+Difficulty: ${context.difficulty}
+Language: ${context.language}
+
+Description:
+${context.description}
+
+Constraints:
+${context.constraints.join('\n')}
+
+--- USER'S CODE ---
+${context.code}
+
+--- INSTRUCTIONS ---
+Perform a detailed code review. Provide constructive, educational feedback.
+DO NOT provide the final optimal code unless it is vastly different and you are outlining it in the alternatives. Focus on learning.
+
+You MUST return your response as a strict, valid JSON object matching this exact schema:
+{
+  "summary": "Brief 2-4 paragraph summary of the solution logic.",
+  "correctness": {
+    "status": "Correct", // or "Possibly Correct" or "Potential Issues Found"
+    "reasoning": "Explanation"
+  },
+  "timeComplexity": { "complexity": "O(...)", "explanation": "..." },
+  "spaceComplexity": { "complexity": "O(...)", "explanation": "..." },
+  "efficiencyRating": { "score": 8, "rationale": "..." },
+  "readabilityRating": { "score": 8, "suggestions": "..." },
+  "interviewReadiness": { "score": 8, "feedback": "..." },
+  "edgeCases": [
+    { "name": "...", "handled": true, "explanation": "..." }
+  ],
+  "improvements": ["practical suggestion 1", "practical suggestion 2"],
+  "alternatives": [
+    { "name": "...", "timeComplexity": "...", "spaceComplexity": "...", "tradeoffs": "..." }
+  ],
+  "overallScore": 85
+}
+
+Ensure the output is ONLY valid JSON, with no markdown code blocks wrapping it. Do not include \`\`\`json.`;
+  }
 }
