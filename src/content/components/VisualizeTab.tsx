@@ -8,6 +8,7 @@ import { VisualizationStorage } from '../../services/visualizationStorage';
 import { PlaybackPlayer } from './visualizer/PlaybackPlayer';
 import { VariableTracker } from './visualizer/VariableTracker';
 import { VisualizerEngine } from './visualizer/VisualizerEngine';
+import { ExplainLikeIm12 } from './ExplainLikeIm12';
 
 export function VisualizeTab({ context }: { context: ProblemContext | null }) {
   const [trace, setTrace] = useState<VisualizationTrace | null>(null);
@@ -174,6 +175,9 @@ export function VisualizeTab({ context }: { context: ProblemContext | null }) {
                   </div>
                 </div>
                 <p className="text-xs text-muted mt-1 leading-relaxed">{trace.patternInsight}</p>
+                <div className="mt-2">
+                  <ExplainLikeIm12 textToSimplify={trace.patternInsight} />
+                </div>
               </div>
             </div>
 

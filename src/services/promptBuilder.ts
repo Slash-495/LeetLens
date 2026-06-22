@@ -137,4 +137,32 @@ You MUST return your response as a strict, valid JSON object matching this exact
 Include ONLY the states relevant to the algorithm. If it's a string problem, use stringState instead of arrayState.
 Ensure the output is ONLY valid JSON. Do not wrap in markdown \`\`\`json.`;
   }
+
+  static buildConceptCardPrompt(topic: string): string {
+    return `You are an expert Computer Science educator.
+Generate a learning concept card for the topic: "${topic}".
+Focus on intuition, simple explanations, and a real-life analogy.
+
+You MUST return your response as a strict, valid JSON object matching this exact schema:
+{
+  "topic": "${topic}",
+  "definition": "Formal but easy to understand definition",
+  "simpleExplanation": "Explain it like I am 12 years old",
+  "analogy": "A strong, relatable real-life analogy",
+  "useCases": ["use case 1", "use case 2", "use case 3"],
+  "mistakes": ["common mistake 1", "common mistake 2"]
+}
+
+Ensure the output is ONLY valid JSON. Do not wrap in markdown \`\`\`json.`;
+  }
+
+  static buildELI12Prompt(textToSimplify: string): string {
+    return `You are a brilliant teacher known for explaining complex technical concepts to 12-year-olds using highly relatable real-life analogies.
+
+Please rewrite and simplify the following explanation so it is extremely intuitive. Do not sound patronizing or childish, just crystal clear and analogy-driven.
+
+--- TEXT TO SIMPLIFY ---
+${textToSimplify}
+`;
+  }
 }

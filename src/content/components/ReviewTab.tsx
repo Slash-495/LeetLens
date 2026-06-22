@@ -7,6 +7,7 @@ import { PromptBuilder } from '../../services/promptBuilder';
 import { ReviewStorage } from '../../services/reviewStorage';
 import { ReviewScorecard } from './ReviewScorecard';
 import { ExpandableSection } from './ExpandableSection';
+import { ExplainLikeIm12 } from './ExplainLikeIm12';
 import { v4 as uuidv4 } from 'uuid';
 
 export function ReviewTab({ context }: { context: ProblemContext | null }) {
@@ -161,6 +162,7 @@ export function ReviewTab({ context }: { context: ProblemContext | null }) {
 
             <div className="text-sm text-text leading-relaxed bg-surface/30 p-4 rounded-xl border border-border/50">
               {activeReview.summary}
+              <ExplainLikeIm12 textToSimplify={activeReview.summary} />
             </div>
 
             <ExpandableSection title="Correctness Analysis" icon={<CheckCircle2 size={16} />} defaultExpanded>

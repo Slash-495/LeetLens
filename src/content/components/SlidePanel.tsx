@@ -5,6 +5,7 @@ import { OverviewTab } from './OverviewTab';
 import { ChatTab } from './ChatTab';
 import { ReviewTab } from './ReviewTab';
 import { VisualizeTab } from './VisualizeTab';
+import { ProgressTab } from './ProgressTab';
 
 interface SlidePanelProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
     { name: 'Chat', icon: <MessageCircle size={16} /> },
     { name: 'Review', icon: <CheckCircle size={16} /> },
     { name: 'Visualize', icon: <Eye size={16} /> },
-    { name: 'Progress', icon: <TrendingUp size={16} />, disabled: true }
+    { name: 'Progress', icon: <TrendingUp size={16} /> }
   ];
 
   return (
@@ -80,22 +81,15 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
         {tabs.map(tab => (
           <button
             key={tab.name}
-            onClick={() => !tab.disabled && setActiveTab(tab.name)}
+            onClick={() => setActiveTab(tab.name)}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors whitespace-nowrap relative group ${
               activeTab === tab.name 
                 ? 'bg-surface text-text' 
-                : tab.disabled 
-                  ? 'text-muted/50 cursor-not-allowed' 
-                  : 'text-muted hover:text-text hover:bg-surface/50'
+                : 'text-muted hover:text-text hover:bg-surface/50'
             }`}
           >
             {tab.icon}
             {tab.name}
-            {tab.disabled && (
-              <div className="absolute top-full mt-1 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-background border border-border text-[10px] px-2 py-1 rounded text-text whitespace-nowrap z-20 pointer-events-none shadow-sm">
-                Phase 3
-              </div>
-            )}
           </button>
         ))}
       </div>
@@ -133,6 +127,8 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
           <ReviewTab context={context} />
         ) : activeTab === 'Visualize' ? (
           <VisualizeTab context={context} />
+        ) : activeTab === 'Progress' ? (
+          <ProgressTab />
         ) : null}
       </div>
     </div>
