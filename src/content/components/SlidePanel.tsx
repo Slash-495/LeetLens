@@ -4,6 +4,7 @@ import type { ProblemContext } from '../../services/leetcodeExtractor';
 import { OverviewTab } from './OverviewTab';
 import { ChatTab } from './ChatTab';
 import { ReviewTab } from './ReviewTab';
+import { VisualizeTab } from './VisualizeTab';
 
 interface SlidePanelProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
     { name: 'Overview', icon: <LayoutDashboard size={16} /> },
     { name: 'Chat', icon: <MessageCircle size={16} /> },
     { name: 'Review', icon: <CheckCircle size={16} /> },
-    { name: 'Visualize', icon: <Eye size={16} />, disabled: true },
+    { name: 'Visualize', icon: <Eye size={16} /> },
     { name: 'Progress', icon: <TrendingUp size={16} />, disabled: true }
   ];
 
@@ -130,6 +131,8 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
           <ChatTab context={context} />
         ) : activeTab === 'Review' ? (
           <ReviewTab context={context} />
+        ) : activeTab === 'Visualize' ? (
+          <VisualizeTab context={context} />
         ) : null}
       </div>
     </div>

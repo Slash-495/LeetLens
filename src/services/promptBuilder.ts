@@ -92,4 +92,49 @@ You MUST return your response as a strict, valid JSON object matching this exact
 
 Ensure the output is ONLY valid JSON, with no markdown code blocks wrapping it. Do not include \`\`\`json.`;
   }
+
+  static buildVisualizationPrompt(context: ProblemContext): string {
+    return `You are a Code Execution Visualizer.
+Your goal is to statically analyze the following code and generate a step-by-step execution trace for a SMALL, representative example input.
+
+--- PROBLEM CONTEXT ---
+Title: ${context.title}
+Difficulty: ${context.difficulty}
+Language: ${context.language}
+
+--- USER'S CODE ---
+${context.code}
+
+--- INSTRUCTIONS ---
+1. Invent a VERY SMALL, simple test case (e.g., array of 3-4 items, a tiny string, or a 2x2 grid).
+2. Trace the execution of the user's code on this test case step-by-step.
+3. Keep the total number of steps under 20 to avoid massive payloads.
+4. For each step, capture the current state of local variables.
+5. If the algorithm uses an Array, String, HashMap, or DP matrix, capture its state in the corresponding visual state object (e.g., arrayState, stringState, mapState, dpState).
+6. Explain what is happening in 1-2 short sentences per step.
+
+You MUST return your response as a strict, valid JSON object matching this exact schema:
+{
+  "algorithmType": "Two Pointers / Sliding Window / DP / etc",
+  "patternInsight": "Brief insight on why this pattern works",
+  "timeComplexity": "O(...)",
+  "spaceComplexity": "O(...)",
+  "dataStructures": ["Array", "HashMap"],
+  "steps": [
+    {
+      "step": 1,
+      "description": "Short explanation",
+      "variables": { "left": 0, "right": 3, "currentSum": 5 },
+      "arrayState": {
+        "values": [2, 7, 11, 15],
+        "pointers": { "left": 0, "right": 3 },
+        "highlights": [0, 3]
+      }
+    }
+  ]
+}
+
+Include ONLY the states relevant to the algorithm. If it's a string problem, use stringState instead of arrayState.
+Ensure the output is ONLY valid JSON. Do not wrap in markdown \`\`\`json.`;
+  }
 }
