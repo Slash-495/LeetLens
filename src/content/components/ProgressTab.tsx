@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Target, TrendingUp, History, BrainCircuit } from 'lucide-react';
+import { Target, TrendingUp, History } from 'lucide-react';
 import type { ProgressStats, TimelineEvent } from '../../types/progress';
 import { ProgressStorage } from '../../services/progressStorage';
 import { PatternDashboard } from './progress/PatternDashboard';
 import { LearningTimeline } from './progress/LearningTimeline';
 import { ExportButton } from './progress/ExportButton';
-import { LearningCards } from './progress/LearningCards';
 
 export function ProgressTab() {
   const [stats, setStats] = useState<ProgressStats | null>(null);
   const [timeline, setTimeline] = useState<TimelineEvent[]>([]);
-  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'timeline' | 'cards'>('overview');
+  const [activeSubTab, setActiveSubTab] = useState<'overview' | 'timeline'>('overview');
 
   useEffect(() => {
     ProgressStorage.getProgressStats().then(({ stats, timeline }) => {
@@ -33,7 +32,6 @@ export function ProgressTab() {
       <div className="flex border-b border-border bg-surface/50">
         <button onClick={() => setActiveSubTab('overview')} className={`flex-1 py-2 text-xs font-medium border-b-2 transition-colors ${activeSubTab === 'overview' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-text'}`}>Overview</button>
         <button onClick={() => setActiveSubTab('timeline')} className={`flex-1 py-2 text-xs font-medium border-b-2 transition-colors ${activeSubTab === 'timeline' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-text'}`}>Timeline</button>
-        <button onClick={() => setActiveSubTab('cards')} className={`flex-1 py-2 text-xs font-medium border-b-2 transition-colors ${activeSubTab === 'cards' ? 'border-accent text-accent' : 'border-transparent text-muted hover:text-text'}`}>Cards</button>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -92,15 +90,6 @@ export function ProgressTab() {
           </div>
         )}
 
-        {activeSubTab === 'cards' && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="flex items-center gap-2 mb-4">
-              <BrainCircuit size={16} className="text-muted" />
-              <h3 className="text-sm font-bold text-text">Concept Cards</h3>
-            </div>
-            <LearningCards />
-          </div>
-        )}
       </div>
     </div>
   );

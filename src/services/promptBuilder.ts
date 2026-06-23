@@ -1,4 +1,5 @@
 import type { ProblemContext } from './leetcodeExtractor';
+import type { LearningProfile } from '../types/learn';
 
 export class PromptBuilder {
   static buildSystemPrompt(context: ProblemContext | null): string {
@@ -236,5 +237,80 @@ You MUST return a strict JSON object matching this schema exactly:
 }
 
 Ensure the output is ONLY valid JSON. Do not wrap in markdown \`\`\`json.`;
+  }
+
+  static buildRecommendationsPrompt(profile: LearningProfile): string {
+    return `You are an expert LeetCode Mentor. Based on the user's local learning profile, recommend problems to solve next.
+Focus on fixing their weak areas and reinforcing recent topics.
+
+Profile:
+- Total Solved: ${profile.totalSolved}
+- Strong Patterns: ${profile.strongPatterns.join(', ') || 'None yet'}
+- Weak Patterns: ${profile.weakPatterns.join(', ') || 'None yet'}
+- Recent Topics: ${profile.recentTopics.join(', ') || 'None yet'}
+
+Return a strict JSON object matching this schema exactly:
+{
+  "easy": [
+    { "title": "...", "difficulty": "Easy", "pattern": "...", "reason": "..." }
+  ],
+  "medium": [
+    { "title": "...", "difficulty": "Medium", "pattern": "...", "reason": "..." }
+  ],
+  "hard": [
+    { "title": "...", "difficulty": "Hard", "pattern": "...", "reason": "..." }
+  ],
+  "learningTakeaway": "One short motivational insight about what they should focus on."
+}
+
+Ensure the output is ONLY valid JSON.`;
+  }
+
+  static buildSimilarProblemsPrompt(context: ProblemContext): string {
+    return `You are an expert LeetCode Mentor. The user is currently looking at:
+Title: ${context.title}
+Difficulty: ${context.difficulty}
+
+Generate 3 similar problems that help reinforce the core concepts of this problem.
+
+Return a strict JSON object matching this schema exactly:
+{
+  "variants": [
+    {
+      "title": "...",
+      "type": "Easier Variant",
+      "skillTaught": "What specific fundamental skill this easier problem teaches."
+    },
+    {
+      "title": "...",
+      "type": "Similar Variant",
+      "skillTaught": "How this relates to the current problem."
+    },
+    {
+      "title": "...",
+      "type": "Harder Variant",
+      "skillTaught": "What additional constraint or trick this harder problem adds."
+    }
+  ]
+}
+
+Ensure the output is ONLY valid JSON.`;
+  }
+
+  static buildConceptReinforcementPrompt(pattern: string): string {
+    return `You are an expert LeetCode Mentor. Break down the concept of "${pattern}".
+
+Return a strict JSON object matching this schema exactly:
+{
+  "keyIdea": "What is the core intuition behind this pattern? Explain it simply.",
+  "commonMistakes": ["mistake 1", "mistake 2"],
+  "whenToUse": "What are the common triggers in a problem description?",
+  "whenNotToUse": "When might this pattern fail or be suboptimal?",
+  "relatedPatterns": [
+    { "pattern": "...", "relationship": "..." }
+  ]
+}
+
+Ensure the output is ONLY valid JSON.`;
   }
 }

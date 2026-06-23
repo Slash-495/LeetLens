@@ -230,7 +230,8 @@ export class AIService {
     }
   }
 
-  static async generateComparison(provider: AIProviderName, apiKey: string, systemPrompt: string): Promise<any> {
+  // --- Generic JSON generator for Phase 7/8 features ---
+  private static async generateJSON(provider: AIProviderName, apiKey: string, systemPrompt: string, contextPrompt: string = "Please generate the JSON response as per the system instructions."): Promise<any> {
     if (!apiKey) throw new Error('API key is missing.');
 
     try {
@@ -251,7 +252,7 @@ export class AIService {
           },
           body: JSON.stringify({
             model,
-            messages: [{ role: 'system', content: systemPrompt }],
+            messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: contextPrompt }],
             response_format: { type: 'json_object' },
             stream: false
           })
@@ -275,7 +276,7 @@ export class AIService {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             system_instruction: { parts: [{ text: systemPrompt }] },
-            contents: [{ role: 'user', parts: [{ text: "Please generate the comparison as per the system instructions." }] }],
+            contents: [{ role: 'user', parts: [{ text: contextPrompt }] }],
             generationConfig: {
               responseMimeType: "application/json"
             }
@@ -297,9 +298,25 @@ export class AIService {
         throw new Error('Unsupported provider');
       }
     } catch (e: any) {
-      console.error("[LeetLens] Comparison Generation Error", e);
-      throw new Error("Failed to generate comparison. Please check your API key or try again.");
+      console.error("[LeetLens] JSON Generation Error", e);
+      throw new Error("Failed to generate response. Please check your API key or try again.");
     }
+  }
+
+  static async generateComparison(provider: AIProviderName, apiKey: string, systemPrompt: string): Promise<any> {
+    return this.generateJSON(provider, apiKey, systemPrompt);
+  }
+
+  static async generateRecommendations(provider: AIProviderName, apiKey: string, systemPrompt: string): Promise<any> {
+    return this.generateJSON(provider, apiKey, systemPrompt);
+  }
+
+  static async generateSimilarProblems(provider: AIProviderName, apiKey: string, systemPrompt: string): Promise<any> {
+    return this.generateJSON(provider, apiKey, systemPrompt);
+  }
+
+  static async generateConceptReinforcement(provider: AIProviderName, apiKey: string, systemPrompt: string): Promise<any> {
+    return this.generateJSON(provider, apiKey, systemPrompt);
   }
 
   static async streamChat(
