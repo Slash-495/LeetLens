@@ -1,5 +1,5 @@
 import { X, RefreshCw, LayoutDashboard, MessageCircle, CheckCircle, Eye, TrendingUp, GitCompare, Lightbulb } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { ProblemContext } from '../../services/leetcodeExtractor';
 import { OverviewTab } from './OverviewTab';
 import { ChatTab } from './ChatTab';
@@ -8,6 +8,7 @@ import { VisualizeTab } from './VisualizeTab';
 import { ProgressTab } from './ProgressTab';
 import { CompareTab } from './CompareTab';
 import { LearnTab } from './LearnTab';
+import { OnboardingFlow } from './OnboardingFlow';
 
 interface SlidePanelProps {
   isOpen: boolean;
@@ -20,6 +21,23 @@ interface SlidePanelProps {
 
 export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, isContest }: SlidePanelProps) {
   const [activeTab, setActiveTab] = useState('Overview');
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [theme, setTheme] = useState<'light'|'dark'|'system'>('dark');
+
+  useEffect(() => {
+    if (typeof chrome !== 'undefined' && chrome.storage) {
+      chrome.storage.local.get(['hasCompletedOnboarding', 'theme'], (res) => {
+        if (!res.hasCompletedOnboarding) {
+          setNeedsOnboarding(true);
+        }
+        if (res.theme) {
+          setTheme(res.theme as 'light'|'dark'|'system');
+        }
+      });
+    }
+  }, [isOpen]);
+
+  const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const tabs = [
     { name: 'Overview', icon: <LayoutDashboard size={16} /> },
@@ -33,10 +51,20 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
 
   return (
     <div 
-      className={`fixed top-0 right-0 h-screen w-[400px] bg-background border-l border-border shadow-2xl transition-transform duration-300 ease-in-out flex flex-col z-[2147483647] ${
+      id="leetlens-root"
+      className={`leetlens-container fixed top-0 right-0 h-screen w-[400px] bg-background border-l border-border shadow-2xl transition-transform duration-300 ease-in-out flex flex-col z-[2147483647] ${isDark ? 'dark' : ''} ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
     >
+      {needsOnboarding ? (
+        <div className="flex-1 h-full overflow-hidden relative">
+           <div className="absolute top-4 right-4 z-50">
+             <button onClick={onClose} className="p-1.5 rounded-lg text-muted hover:bg-surface transition-colors"><X size={18} /></button>
+           </div>
+           <OnboardingFlow onComplete={() => setNeedsOnboarding(false)} />
+        </div>
+      ) : (
+      <>
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b border-border bg-surface/50">
         <div className="flex items-center gap-3">
@@ -139,6 +167,8 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
           <ProgressTab />
         ) : null}
       </div>
+      </>
+      )}
     </div>
   );
 }

@@ -4,15 +4,16 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        background: '#0B0F17',
-        surface: '#111827',
-        accent: '#6366F1',
-        text: '#F9FAFB',
-        muted: '#9CA3AF',
-        border: '#1F2937'
+        background: 'var(--color-background)',
+        surface: 'var(--color-surface)',
+        accent: 'var(--color-accent)',
+        text: 'var(--color-text)',
+        muted: 'var(--color-muted)',
+        border: 'var(--color-border)'
       },
       borderRadius: {
         'xl': '12px',

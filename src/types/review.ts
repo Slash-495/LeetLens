@@ -1,6 +1,7 @@
 export interface ReviewReport {
   id: string; // Unique ID for history
   timestamp: number;
+  codeSnippet?: string; // The exact code this was generated for
   
   summary: string;
   

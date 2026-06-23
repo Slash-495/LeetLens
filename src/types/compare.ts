@@ -26,6 +26,7 @@ export interface SideBySideMetrics {
 }
 
 export interface ComparisonReport {
+  codeSnippet?: string; // The exact code this was generated for
   id?: string;
   timestamp?: number;
   userProfile: SolutionProfile;

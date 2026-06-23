@@ -90,7 +90,10 @@ export function VisualizeTab({ context }: { context: ProblemContext | null }) {
       const systemPrompt = PromptBuilder.buildVisualizationPrompt(context);
       const jsonResponse = await AIService.generateVisualization(provider, apiKey, systemPrompt);
       
-      const newTrace: VisualizationTrace = jsonResponse as VisualizationTrace;
+      const newTrace: VisualizationTrace = {
+        ...(jsonResponse as VisualizationTrace),
+        codeSnippet: context.code
+      };
       if (!newTrace.steps || newTrace.steps.length === 0) {
         throw new Error("AI returned an empty execution trace.");
       }
@@ -114,6 +117,11 @@ export function VisualizeTab({ context }: { context: ProblemContext | null }) {
         <span className="text-[10px] font-medium text-muted uppercase tracking-wider">
           Code Execution Visualizer
         </span>
+        <div className="flex items-center gap-2">
+          {trace && !isGenerating && (
+            <span className="text-[9px] font-bold bg-accent/10 text-accent px-1.5 py-0.5 rounded uppercase tracking-wider border border-accent/20">Cached</span>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col">
@@ -121,6 +129,28 @@ export function VisualizeTab({ context }: { context: ProblemContext | null }) {
           <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-400 flex items-start gap-2 mb-4">
             <AlertCircle size={14} className="shrink-0 mt-0.5" />
             <span className="leading-relaxed">{error}</span>
+          </div>
+        )}
+
+        {trace && !isGenerating && (
+          ((trace as any).codeSnippet !== undefined 
+            ? (trace as any).codeSnippet?.trim() !== context?.code?.trim() 
+            : true)
+        ) && (
+          <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-xs text-yellow-500 flex items-center justify-between gap-2 mb-4 animate-in fade-in zoom-in-95">
+            <div className="flex items-start gap-2">
+              <AlertCircle size={14} className="shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold block">Code Has Changed</span>
+                <span className="opacity-80">This trace is for an older version of your code.</span>
+              </div>
+            </div>
+            <button 
+              onClick={handleGenerate}
+              className="px-3 py-1.5 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 rounded-md font-bold transition-colors whitespace-nowrap"
+            >
+              Run New Trace
+            </button>
           </div>
         )}
 

@@ -74,6 +74,7 @@ export function ReviewTab({ context }: { context: ProblemContext | null }) {
       const newReview: ReviewReport = {
         id: uuidv4(),
         timestamp: Date.now(),
+        codeSnippet: context.code,
         ...jsonResponse
       };
 
@@ -91,6 +92,11 @@ export function ReviewTab({ context }: { context: ProblemContext | null }) {
   };
 
   const activeReview = reviews.find(r => r.id === activeReviewId) || null;
+  const isOutdated = activeReview && (
+    (activeReview as any).codeSnippet !== undefined
+      ? (activeReview as any).codeSnippet?.trim() !== context?.code?.trim()
+      : true // Legacy caches without snippet
+  );
 
   return (
     <div className="flex flex-col h-full bg-background relative -mx-4 -mb-4">
@@ -99,19 +105,24 @@ export function ReviewTab({ context }: { context: ProblemContext | null }) {
         <span className="text-[10px] font-medium text-muted uppercase tracking-wider">
           Solution Review Engine
         </span>
-        {reviews.length > 0 && !isGenerating && (
-          <select 
-            value={activeReviewId || ''}
-            onChange={(e) => setActiveReviewId(e.target.value)}
-            className="bg-transparent text-xs text-text border border-border rounded-md px-2 py-1 focus:outline-none focus:border-accent"
-          >
-            {reviews.map((r, i) => (
-              <option key={r.id} value={r.id}>
-                {i === 0 ? 'Latest Review' : new Date(r.timestamp).toLocaleTimeString()}
-              </option>
-            ))}
-          </select>
-        )}
+        <div className="flex items-center gap-2">
+          {reviews.length > 0 && !isGenerating && (
+            <span className="text-[9px] font-bold bg-accent/10 text-accent px-1.5 py-0.5 rounded uppercase tracking-wider border border-accent/20">Cached</span>
+          )}
+          {reviews.length > 0 && !isGenerating && (
+            <select 
+              value={activeReviewId || ''}
+              onChange={(e) => setActiveReviewId(e.target.value)}
+              className="bg-transparent text-xs text-text border border-border rounded-md px-2 py-1 focus:outline-none focus:border-accent"
+            >
+              {reviews.map((r, i) => (
+                <option key={r.id} value={r.id}>
+                  {i === 0 ? 'Latest Review' : new Date(r.timestamp).toLocaleTimeString()}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -119,6 +130,24 @@ export function ReviewTab({ context }: { context: ProblemContext | null }) {
           <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-400 flex items-start gap-2">
             <AlertCircle size={14} className="shrink-0 mt-0.5" />
             <span className="leading-relaxed">{error}</span>
+          </div>
+        )}
+
+        {isOutdated && !isGenerating && (
+          <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-xs text-yellow-500 flex items-center justify-between gap-2 animate-in fade-in zoom-in-95">
+            <div className="flex items-start gap-2">
+              <AlertTriangle size={14} className="shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold block">Code Has Changed</span>
+                <span className="opacity-80">This review is based on an older version of your code.</span>
+              </div>
+            </div>
+            <button 
+              onClick={handleGenerateReview}
+              className="px-3 py-1.5 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 rounded-md font-bold transition-colors whitespace-nowrap"
+            >
+              Update Review
+            </button>
           </div>
         )}
 

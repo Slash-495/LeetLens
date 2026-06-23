@@ -66,7 +66,10 @@ export function CompareTab({ context }: { context: ProblemContext | null }) {
       const systemPrompt = PromptBuilder.buildComparisonPrompt(context);
       const jsonResponse = await AIService.generateComparison(provider, apiKey, systemPrompt);
       
-      const newReport: ComparisonReport = jsonResponse as ComparisonReport;
+      const newReport: ComparisonReport = {
+        ...jsonResponse,
+        codeSnippet: context.code
+      };
       await CompareStorage.saveComparison(context.url, newReport);
       setReport(newReport);
       
@@ -84,27 +87,53 @@ export function CompareTab({ context }: { context: ProblemContext | null }) {
         <span className="text-[10px] font-medium text-muted uppercase tracking-wider">
           Solutions Comparison
         </span>
-        {report && mode === 'conceptual' && (
-          <button 
-            onClick={() => setMode('visual')}
-            className="flex items-center gap-1.5 px-2 py-1 bg-accent/10 text-accent rounded-md text-[10px] font-bold uppercase tracking-wider hover:bg-accent/20 transition-colors"
-          >
-            <Eye size={12} />
-            Visual Mode
-          </button>
-        )}
-        {mode === 'visual' && (
-          <button 
-            onClick={() => setMode('conceptual')}
-            className="flex items-center gap-1.5 px-2 py-1 bg-surface text-text rounded-md text-[10px] font-bold uppercase tracking-wider hover:bg-surface/80 transition-colors border border-border"
-          >
-            <ChevronLeft size={12} />
-            Back to Analysis
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {report && !isGenerating && mode === 'conceptual' && (
+            <span className="text-[9px] font-bold bg-accent/10 text-accent px-1.5 py-0.5 rounded uppercase tracking-wider border border-accent/20">Cached</span>
+          )}
+          {report && mode === 'conceptual' && (
+            <button 
+              onClick={() => setMode('visual')}
+              className="flex items-center gap-1.5 px-2 py-1 bg-accent/10 text-accent rounded-md text-[10px] font-bold uppercase tracking-wider hover:bg-accent/20 transition-colors"
+            >
+              <Eye size={12} />
+              Visual Mode
+            </button>
+          )}
+          {mode === 'visual' && (
+            <button 
+              onClick={() => setMode('conceptual')}
+              className="flex items-center gap-1.5 px-2 py-1 bg-surface text-text rounded-md text-[10px] font-bold uppercase tracking-wider hover:bg-surface/80 transition-colors border border-border"
+            >
+              <ChevronLeft size={12} />
+              Back to Analysis
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 flex flex-col relative">
+        {report && !isGenerating && (
+          ((report as any).codeSnippet !== undefined 
+            ? (report as any).codeSnippet?.trim() !== context?.code?.trim() 
+            : true)
+        ) && (
+          <div className="p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-xs text-yellow-500 flex items-center justify-between gap-2 mb-4 animate-in fade-in zoom-in-95">
+            <div className="flex items-start gap-2">
+              <AlertCircle size={14} className="shrink-0 mt-0.5" />
+              <div>
+                <span className="font-bold block">Code Has Changed</span>
+                <span className="opacity-80">This comparison is for an older version of your code.</span>
+              </div>
+            </div>
+            <button 
+              onClick={handleGenerate}
+              className="px-3 py-1.5 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-500 rounded-md font-bold transition-colors whitespace-nowrap"
+            >
+              Run New Comparison
+            </button>
+          </div>
+        )}
         {error && (
           <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-400 flex items-start gap-2 mb-4">
             <AlertCircle size={14} className="shrink-0 mt-0.5" />

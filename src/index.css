@@ -3,6 +3,24 @@
 @tailwind utilities;
 
 @layer base {
+  .leetlens-container {
+    --color-background: #FFFFFF;
+    --color-surface: #F3F4F6;
+    --color-border: #E5E7EB;
+    --color-text: #111827;
+    --color-muted: #6B7280;
+    --color-accent: #6366F1;
+  }
+
+  .leetlens-container.dark {
+    --color-background: #0B0F17;
+    --color-surface: #111827;
+    --color-border: #1F2937;
+    --color-text: #F9FAFB;
+    --color-muted: #9CA3AF;
+    --color-accent: #6366F1;
+  }
+
   body {
     @apply bg-background text-text font-sans antialiased m-0 p-0;
     width: 400px;

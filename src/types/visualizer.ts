@@ -26,5 +26,6 @@ export interface VisualizationTrace {
   timeComplexity: string;
   spaceComplexity: string;
   dataStructures: string[];
+  codeSnippet?: string;
   steps: VisualizerStep[];
 }
