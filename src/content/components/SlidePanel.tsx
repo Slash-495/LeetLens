@@ -1,4 +1,4 @@
-import { X, RefreshCw, LayoutDashboard, MessageCircle, CheckCircle, Eye, TrendingUp } from 'lucide-react';
+import { X, RefreshCw, LayoutDashboard, MessageCircle, CheckCircle, Eye, TrendingUp, GitCompare } from 'lucide-react';
 import { useState } from 'react';
 import type { ProblemContext } from '../../services/leetcodeExtractor';
 import { OverviewTab } from './OverviewTab';
@@ -6,6 +6,7 @@ import { ChatTab } from './ChatTab';
 import { ReviewTab } from './ReviewTab';
 import { VisualizeTab } from './VisualizeTab';
 import { ProgressTab } from './ProgressTab';
+import { CompareTab } from './CompareTab';
 
 interface SlidePanelProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
     { name: 'Chat', icon: <MessageCircle size={16} /> },
     { name: 'Review', icon: <CheckCircle size={16} /> },
     { name: 'Visualize', icon: <Eye size={16} /> },
+    { name: 'Compare', icon: <GitCompare size={16} /> },
     { name: 'Progress', icon: <TrendingUp size={16} /> }
   ];
 
@@ -127,6 +129,8 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
           <ReviewTab context={context} />
         ) : activeTab === 'Visualize' ? (
           <VisualizeTab context={context} />
+        ) : activeTab === 'Compare' ? (
+          <CompareTab context={context} />
         ) : activeTab === 'Progress' ? (
           <ProgressTab />
         ) : null}

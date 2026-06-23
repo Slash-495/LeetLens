@@ -165,4 +165,76 @@ Please rewrite and simplify the following explanation so it is extremely intuiti
 ${textToSimplify}
 `;
   }
+
+  static buildComparisonPrompt(context: ProblemContext): string {
+    return `You are a Senior Staff Engineer reviewing a junior developer's solution.
+You will compare their solution against optimal and alternative approaches. Focus heavily on tradeoffs, architecture, and engineering decisions.
+
+Title: ${context.title}
+Difficulty: ${context.difficulty}
+Language: ${context.language}
+
+Description:
+${context.description}
+
+Constraints:
+${context.constraints.join('\n')}
+
+User's Code:
+${context.code}
+
+You MUST return a strict JSON object matching this schema exactly:
+{
+  "userProfile": {
+    "pattern": "e.g. HashMap",
+    "timeComplexity": "e.g. O(N)",
+    "spaceComplexity": "e.g. O(N)",
+    "strengths": ["strength 1"],
+    "weaknesses": ["weakness 1"]
+  },
+  "optimalAnalysis": {
+    "reasoning": "Why is the optimal solution considered optimal?",
+    "runtimeExplain": "Explain runtime",
+    "memoryExplain": "Explain memory",
+    "simplicityExplain": "Explain simplicity",
+    "scalabilityExplain": "Explain scalability"
+  },
+  "sideBySide": {
+    "readability": { "user": "...", "optimal": "..." },
+    "memoryUsage": { "user": "...", "optimal": "..." },
+    "implementationDifficulty": { "user": "...", "optimal": "..." },
+    "interviewFriendliness": { "user": "...", "optimal": "..." },
+    "maintainability": { "user": "...", "optimal": "..." }
+  },
+  "alternatives": [
+    {
+      "name": "e.g. Sorting",
+      "pattern": "e.g. Sorting",
+      "timeComplexity": "O(N log N)",
+      "spaceComplexity": "O(1)",
+      "difficulty": "Easy",
+      "advantages": ["adv 1"],
+      "disadvantages": ["disadv 1"],
+      "tradeoffs": "Tradeoff explanation"
+    }
+  ],
+  "tradeoffExplorer": [
+    "Tradeoff thought 1",
+    "Tradeoff thought 2"
+  ],
+  "patternComparison": {
+    "recommendedPattern": "...",
+    "whyFitsBetter": "...",
+    "whenToUseUserPattern": "...",
+    "whenToUseRecommendedPattern": "..."
+  },
+  "relatedPatterns": [
+    { "pattern": "...", "relationship": "..." }
+  ],
+  "learningTakeaway": "One key concise lesson to take away",
+  "optimalCodeSnippet": "Provide the exact code snippet for the optimal solution in ${context.language}"
+}
+
+Ensure the output is ONLY valid JSON. Do not wrap in markdown \`\`\`json.`;
+  }
 }
