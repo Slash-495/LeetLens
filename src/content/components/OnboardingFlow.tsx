@@ -91,7 +91,17 @@ export function OnboardingFlow({ onComplete }: OnboardingFlowProps) {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-muted uppercase tracking-wider">API Key</label>
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold text-muted uppercase tracking-wider">API Key</label>
+                  <a 
+                    href={provider === 'Gemini' ? 'https://aistudio.google.com/api-keys' : provider === 'OpenAI' ? 'https://platform.openai.com/api-keys' : 'https://openrouter.ai/keys'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-accent hover:underline flex items-center gap-1 font-medium"
+                  >
+                    Get your {provider} key
+                  </a>
+                </div>
                 <input
                   type="password"
                   value={apiKey}

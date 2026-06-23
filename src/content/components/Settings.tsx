@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Settings as SettingsIcon, Key, Palette, Shield, Info, ExternalLink, Heart, CheckCircle2 } from 'lucide-react';
+import { Settings as SettingsIcon, Key, Palette, Shield, Info, ExternalLink, CheckCircle2 } from 'lucide-react';
 import type { AIProviderName } from '../../services/aiProvider';
 
 interface SettingsProps {
   onClose: () => void;
+  onThemeChange: (theme: 'light'|'dark'|'system') => void;
 }
 
-export function Settings({ onClose }: SettingsProps) {
+export function Settings({ onClose, onThemeChange }: SettingsProps) {
   const [activeTab, setActiveTab] = useState<'general' | 'ai' | 'privacy' | 'about'>('ai');
   
   // AI State
@@ -38,18 +39,9 @@ export function Settings({ onClose }: SettingsProps) {
 
   const handleThemeChange = (newTheme: 'light'|'dark'|'system') => {
     setTheme(newTheme);
+    onThemeChange(newTheme);
     if (typeof chrome !== 'undefined' && chrome.storage) {
       chrome.storage.local.set({ theme: newTheme });
-    }
-    
-    // Live apply to current session
-    const root = document.getElementById('leetlens-root');
-    if (root) {
-      if (newTheme === 'dark' || (newTheme === 'system' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        root.classList.add('dark');
-      } else {
-        root.classList.remove('dark');
-      }
     }
   };
 
@@ -125,7 +117,17 @@ export function Settings({ onClose }: SettingsProps) {
                 </select>
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-bold text-muted uppercase tracking-wider block">API Key</label>
+                <div className="flex justify-between items-center">
+                  <label className="text-xs font-bold text-muted uppercase tracking-wider">API Key</label>
+                  <a 
+                    href={provider === 'Gemini' ? 'https://aistudio.google.com/api-keys' : provider === 'OpenAI' ? 'https://platform.openai.com/api-keys' : 'https://openrouter.ai/keys'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-[10px] text-accent hover:underline flex items-center gap-1 font-medium"
+                  >
+                    Get your {provider} key
+                  </a>
+                </div>
                 <input
                   type="password"
                   value={apiKey}
@@ -179,17 +181,13 @@ export function Settings({ onClose }: SettingsProps) {
               </div>
 
               <div className="space-y-2.5">
-                <a href="https://github.com/yourusername/leetlens" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-border hover:border-accent/50 hover:bg-surface transition-colors group">
+                <a href="https://github.com/Slash-495/LeetLens" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-border hover:border-accent/50 hover:bg-surface transition-colors group">
                   <span className="text-xs font-bold text-text group-hover:text-accent transition-colors">GitHub Repository</span>
                   <ExternalLink size={14} className="text-muted group-hover:text-accent transition-colors" />
                 </a>
-                <a href="https://github.com/yourusername/leetlens/issues" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-border hover:border-accent/50 hover:bg-surface transition-colors group">
+                <a href="https://github.com/Slash-495/LeetLens/issues" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-border hover:border-accent/50 hover:bg-surface transition-colors group">
                   <span className="text-xs font-bold text-text group-hover:text-accent transition-colors">Report a Bug / Request Feature</span>
                   <ExternalLink size={14} className="text-muted group-hover:text-accent transition-colors" />
-                </a>
-                <a href="https://buymeacoffee.com/yourusername" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-3 rounded-xl border border-border hover:bg-surface transition-colors group bg-accent/5 hover:bg-accent/10 border-accent/20">
-                  <span className="text-xs font-bold text-accent flex items-center gap-2"><Heart size={14} fill="currentColor" /> Buy Me A Coffee</span>
-                  <ExternalLink size={14} className="text-accent" />
                 </a>
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { X, RefreshCw, LayoutDashboard, MessageCircle, CheckCircle, Eye, TrendingUp, GitCompare, Lightbulb } from 'lucide-react';
+import { X, RefreshCw, LayoutDashboard, MessageCircle, CheckCircle, Eye, TrendingUp, GitCompare, Lightbulb, Settings as SettingsIcon } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { ProblemContext } from '../../services/leetcodeExtractor';
 import { OverviewTab } from './OverviewTab';
@@ -9,6 +9,7 @@ import { ProgressTab } from './ProgressTab';
 import { CompareTab } from './CompareTab';
 import { LearnTab } from './LearnTab';
 import { OnboardingFlow } from './OnboardingFlow';
+import { Settings } from './Settings';
 
 interface SlidePanelProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ interface SlidePanelProps {
 export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, isContest }: SlidePanelProps) {
   const [activeTab, setActiveTab] = useState('Overview');
   const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [theme, setTheme] = useState<'light'|'dark'|'system'>('dark');
 
   useEffect(() => {
@@ -90,7 +92,14 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <button 
+            onClick={() => setIsSettingsOpen(true)}
+            className="p-1.5 rounded-lg text-muted hover:text-text hover:bg-surface transition-colors"
+            title="Settings"
+          >
+            <SettingsIcon size={16} />
+          </button>
           <button 
             onClick={onRefresh}
             disabled={isExtracting}
@@ -167,6 +176,7 @@ export function SlidePanel({ isOpen, onClose, context, isExtracting, onRefresh, 
           <ProgressTab />
         ) : null}
       </div>
+      {isSettingsOpen && <Settings onClose={() => setIsSettingsOpen(false)} onThemeChange={setTheme} />}
       </>
       )}
     </div>
