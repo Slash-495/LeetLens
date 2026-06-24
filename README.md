@@ -1,7 +1,7 @@
 <div align="center">
   <img src="public/icon128.png" alt="LeetLens Logo" width="128" />
   <h1>LeetLens</h1>
-  <p><strong>Your AI-Powered Interview & Coding Assistant for LeetCode</strong></p>
+  <p><strong>Your AI-Powered Coding Assistant for LeetCode</strong></p>
 </div>
 
 LeetLens is a powerful Chrome Extension that integrates directly into LeetCode. It acts as your personal AI mentor, helping you understand complex algorithms, visualize execution traces, review your code, and intelligently compare your approach with optimal solutions.
