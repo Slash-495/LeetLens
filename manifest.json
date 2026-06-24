@@ -12,8 +12,15 @@
     "tabs"
   ],
   "host_permissions": [
-    "*://leetcode.com/problems/*"
+    "*://leetcode.com/problems/*",
+    "https://api.openai.com/*",
+    "https://openrouter.ai/*",
+    "https://generativelanguage.googleapis.com/*"
   ],
+  "background": {
+    "service_worker": "src/background/index.ts",
+    "type": "module"
+  },
   "content_scripts": [
     {
       "matches": ["*://leetcode.com/problems/*"],

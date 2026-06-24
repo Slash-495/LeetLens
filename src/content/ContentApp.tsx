@@ -10,29 +10,31 @@ export function ContentApp() {
   const [isExtracting, setIsExtracting] = useState(false);
   const [isContest, setIsContest] = useState(() => window.location.href.includes('contest'));
 
-  const extractContext = async () => {
+  const extractContext = async (showSpinner = true) => {
     if (isContest) return;
-    setIsExtracting(true);
+    if (showSpinner) setIsExtracting(true);
     try {
       const result = await LeetcodeExtractor.getProblemContext();
       setContext(result);
     } catch (e) {
       console.error('[LeetLens] Error extracting context', e);
     } finally {
-      setIsExtracting(false);
+      if (showSpinner) setIsExtracting(false);
     }
   };
 
   useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
     if (!isContest) {
-      setTimeout(extractContext, 1500);
+      setTimeout(() => extractContext(true), 1500);
+      interval = setInterval(() => extractContext(false), 2000);
     }
 
     NavigationObserver.start((newUrl) => {
       const contest = newUrl.includes('contest');
       setIsContest(contest);
       if (!contest) {
-        setTimeout(extractContext, 1000);
+        setTimeout(() => extractContext(true), 1000);
       } else {
         setContext(null);
         setIsOpen(false); // Optionally close panel if they enter a contest
@@ -41,6 +43,7 @@ export function ContentApp() {
 
     return () => {
       NavigationObserver.stop();
+      if (interval) clearInterval(interval);
     };
   }, [isContest]);
 
@@ -56,7 +59,7 @@ export function ContentApp() {
         onClose={() => setIsOpen(false)} 
         context={context}
         isExtracting={isExtracting}
-        onRefresh={extractContext}
+        onRefresh={() => extractContext(true)}
         isContest={isContest}
       />
     </>
