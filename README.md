@@ -28,6 +28,14 @@ Find targeted practice problems based on the exact logic of the problem you just
 Track your performance, visualizations, and get personalized recommendations on what to learn next.
 ![Learning Dashboard](screenshots/dashboard.png)
 
+### 6. Interactive Chat Mentor
+Stuck on a problem? Ask the AI specific questions about your code without revealing the full solution.
+![Interactive Chat Mentor](screenshots/chat.png)
+
+### 7. Problem Overview & Context
+Instantly view problem descriptions, examples, constraints, and your personalized notes in a clean UI.
+![Problem Overview](screenshots/overview.png)
+
 ## ✨ Features
 
 - **Solution Review Engine**: Get instant, senior-engineer-level code reviews. Analyzes your solution for correctness, time/space complexity, edge cases, and provides suggestions for improvement.
