@@ -6,6 +6,28 @@
 
 LeetLens is a powerful Chrome Extension that integrates directly into LeetCode. It acts as your personal AI mentor, helping you understand complex algorithms, visualize execution traces, review your code, and intelligently compare your approach with optimal solutions.
 
+## 📸 See It In Action
+
+### 1. Solution Review Engine
+Get instant, senior-engineer-level code reviews on correctness, complexity, and edge cases.
+![Solution Review Engine](screenshots/review.png)
+
+### 2. Execution Trace Visualizer
+Understand recursion trees, variables, and logic flow step-by-step.
+![Execution Trace Visualizer](screenshots/visualize.png)
+
+### 3. Intelligent Solutions Comparison
+Compare your specific brute-force approach against the optimal solution.
+![Solutions Comparison](screenshots/compare.png)
+
+### 4. Similar Problem Discovery
+Find targeted practice problems based on the exact logic of the problem you just solved.
+![Similar Problems](screenshots/similar.png)
+
+### 5. Learning Dashboard
+Track your performance, visualizations, and get personalized recommendations on what to learn next.
+![Learning Dashboard](screenshots/dashboard.png)
+
 ## ✨ Features
 
 - **Solution Review Engine**: Get instant, senior-engineer-level code reviews. Analyzes your solution for correctness, time/space complexity, edge cases, and provides suggestions for improvement.
