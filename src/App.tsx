@@ -36,8 +36,8 @@ function App() {
           </div>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
-            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-surface border border-border shadow-sm mb-6">
-              <span className="text-accent font-bold text-2xl">LL</span>
+            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-surface border border-border shadow-sm mb-6 overflow-hidden">
+              <img src="/icon.png" alt="LeetLens" className="w-full h-full object-cover" />
             </div>
             <h2 className="text-xl font-semibold text-text mb-2 tracking-tight">LeetLens</h2>
             <p className="text-sm text-muted mb-8 leading-relaxed">AI-powered interview and coding assistant for LeetCode.</p>
