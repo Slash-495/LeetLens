@@ -73,10 +73,19 @@ export class LeetcodeExtractor {
       };
       window.addEventListener('message', listener);
 
-      const script = document.createElement('script');
-      script.src = chrome.runtime.getURL('monaco-inject.js');
-      script.onload = () => script.remove();
-      document.documentElement.appendChild(script);
+      try {
+        const script = document.createElement('script');
+        script.src = chrome.runtime.getURL('monaco-inject.js');
+        script.onload = () => script.remove();
+        document.documentElement.appendChild(script);
+      } catch (e: any) {
+        if (e?.message?.includes('Extension context invalidated')) {
+          window.removeEventListener('message', listener);
+          resolve('');
+          return;
+        }
+        throw e;
+      }
 
       setTimeout(() => {
         window.removeEventListener('message', listener);

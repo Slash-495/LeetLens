@@ -16,7 +16,10 @@ export function ContentApp() {
     try {
       const result = await LeetcodeExtractor.getProblemContext();
       setContext(result);
-    } catch (e) {
+    } catch (e: any) {
+      if (e?.message?.includes('Extension context invalidated')) {
+        return;
+      }
       console.error('[LeetLens] Error extracting context', e);
     } finally {
       if (showSpinner) setIsExtracting(false);
